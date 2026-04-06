@@ -1,8 +1,9 @@
 import { X, Sparkles } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Activity, PresetActivity } from '@types';
 import { theme } from '../styles/theme';
 import { aiService } from '../services/aiService';
+import { platformApi } from '../services/platformApi';
 import { getTopCategoriesByCount } from '../utils/activityDefaults';
 
 interface AddActivityModalProps {
@@ -21,6 +22,23 @@ export default function AddActivityModal({
   initialCategory,
   existingActivities = [],
 }: AddActivityModalProps) {
+  /** Avoid closing immediately: the opening click can finish on the backdrop (mouseup). */
+  const backdropCloseEnabled = useRef(false);
+
+  useEffect(() => {
+    backdropCloseEnabled.current = false;
+    const t = window.setTimeout(() => {
+      backdropCloseEnabled.current = true;
+    }, 200);
+    return () => window.clearTimeout(t);
+  }, []);
+
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) return;
+    if (!backdropCloseEnabled.current) return;
+    onClose();
+  };
+
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState(initialCategory ?? '');
@@ -60,16 +78,23 @@ export default function AddActivityModal({
     e?.preventDefault();
     if (!title.trim()) return;
 
-    await onAdd({
-      title: title.trim(),
-      description: description.trim(),
-      category: category || undefined,
-      status: 'todo',
-      tags: tags.split(',').map((t) => t.trim()).filter(Boolean),
-      aiGenerated: prefilledFromSuggestion || undefined,
-    });
-
-    onClose();
+    try {
+      await onAdd({
+        title: title.trim(),
+        description: description.trim(),
+        category: category || undefined,
+        status: 'todo',
+        tags: tags.split(',').map((t) => t.trim()).filter(Boolean),
+        aiGenerated: prefilledFromSuggestion || undefined,
+      });
+      onClose();
+    } catch (err) {
+      console.error(err);
+      void platformApi.showNotification(
+        'Could not save activity',
+        'Check your connection or Firebase rules, then try again.'
+      );
+    }
   };
 
   const handleFormKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
@@ -93,7 +118,7 @@ export default function AddActivityModal({
         justifyContent: 'center',
         zIndex: 1000,
       }}
-      onClick={onClose}
+      onClick={handleBackdropClick}
     >
       <div
         style={{

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { X, ChevronLeft, ChevronRight, Trash2 } from 'lucide-react';
 import { Photo } from '@types';
 import { theme } from '../styles/theme';
@@ -13,6 +13,22 @@ interface PhotoGalleryProps {
 }
 
 export default function PhotoGallery({ photos, currentIndex = 0, onClose, onDelete }: PhotoGalleryProps) {
+  const backdropCloseEnabled = useRef(false);
+
+  useEffect(() => {
+    backdropCloseEnabled.current = false;
+    const t = window.setTimeout(() => {
+      backdropCloseEnabled.current = true;
+    }, 200);
+    return () => window.clearTimeout(t);
+  }, []);
+
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) return;
+    if (!backdropCloseEnabled.current) return;
+    onClose();
+  };
+
   const [index, setIndex] = useState(currentIndex);
 
   const handlePrevious = () => {
@@ -47,7 +63,7 @@ export default function PhotoGallery({ photos, currentIndex = 0, onClose, onDele
         justifyContent: 'center',
         zIndex: 2000,
       }}
-      onClick={onClose}
+      onClick={handleBackdropClick}
       onKeyDown={handleKeyDown}
       tabIndex={0}
     >

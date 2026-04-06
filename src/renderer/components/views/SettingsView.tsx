@@ -7,7 +7,7 @@ import { useAuth } from '../../hooks/useAuth';
 
 export default function SettingsView() {
   const { settings, saveSettings, loading } = useSettings();
-  const { user, isEnabled, signInWithGoogle, signOutGoogle } = useAuth();
+  const { user, isEnabled, authError, clearAuthError, signInWithGoogle, signOutGoogle } = useAuth();
   const [localSettings, setLocalSettings] = useState(settings);
 
   useEffect(() => {
@@ -88,8 +88,42 @@ export default function SettingsView() {
                 <p style={{ fontSize: '13px', color: theme.colors.textSecondary, lineHeight: 1.5, marginBottom: '14px' }}>
                   {user
                     ? `Signed in as ${user.email ?? user.displayName ?? 'Google user'}. Your activities, settings, and photos sync across devices.`
-                    : 'Sign in with Google to sync your data and photos across devices.'}
+                    : 'Sign in with Google to sync your data and photos across devices. You will be sent to Google in this window (no popup).'}
                 </p>
+                {authError && (
+                  <div
+                    role="alert"
+                    style={{
+                      marginBottom: '14px',
+                      padding: '12px 14px',
+                      borderRadius: theme.borderRadius.medium,
+                      background: '#FEE2E2',
+                      color: '#991B1B',
+                      fontSize: '13px',
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    <div style={{ fontWeight: 700, marginBottom: '6px' }}>Sign-in didn’t finish</div>
+                    {authError}
+                    <button
+                      type="button"
+                      onClick={clearAuthError}
+                      style={{
+                        marginTop: '10px',
+                        padding: '6px 12px',
+                        border: 'none',
+                        borderRadius: theme.borderRadius.small,
+                        background: '#991B1B',
+                        color: 'white',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                        fontWeight: 600,
+                      }}
+                    >
+                      Dismiss
+                    </button>
+                  </div>
+                )}
                 {user ? (
                   <button
                     type="button"

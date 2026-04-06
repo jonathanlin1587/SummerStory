@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { X } from 'lucide-react';
 import { Activity } from '@types';
 import { theme } from '../styles/theme';
@@ -13,6 +13,22 @@ interface EditActivityModalProps {
 const categories = ['Outdoor', 'Creative', 'Food', 'Adventure', 'Relaxation', 'Social'];
 
 export default function EditActivityModal({ activity, onClose, onSave }: EditActivityModalProps) {
+  const backdropCloseEnabled = useRef(false);
+
+  useEffect(() => {
+    backdropCloseEnabled.current = false;
+    const t = window.setTimeout(() => {
+      backdropCloseEnabled.current = true;
+    }, 200);
+    return () => window.clearTimeout(t);
+  }, []);
+
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) return;
+    if (!backdropCloseEnabled.current) return;
+    onClose();
+  };
+
   const initial = useMemo(
     () => ({
       title: activity.title,
@@ -85,7 +101,7 @@ export default function EditActivityModal({ activity, onClose, onSave }: EditAct
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: 1000,
-    }} onClick={onClose}>
+    }} onClick={handleBackdropClick}>
       <div
         style={{
           background: theme.colors.surface,

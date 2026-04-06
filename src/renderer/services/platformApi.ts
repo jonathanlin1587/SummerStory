@@ -133,7 +133,13 @@ export const platformApi = {
     if (electronAPI) return electronAPI.saveActivities(activities);
 
     if (canUseCloudSync()) {
-      return saveCloudData({ activities });
+      try {
+        return await saveCloudData({ activities });
+      } catch (e) {
+        console.error('Cloud save failed; saving to browser storage instead.', e);
+        saveLocalJson(ACTIVITIES_KEY, activities);
+        return true;
+      }
     }
 
     saveLocalJson(ACTIVITIES_KEY, activities);
@@ -161,7 +167,13 @@ export const platformApi = {
     if (electronAPI) return electronAPI.saveSettings(settings);
 
     if (canUseCloudSync()) {
-      return saveCloudData({ settings });
+      try {
+        return await saveCloudData({ settings });
+      } catch (e) {
+        console.error('Cloud settings save failed; saving locally.', e);
+        saveLocalJson(SETTINGS_KEY, settings);
+        return true;
+      }
     }
 
     saveLocalJson(SETTINGS_KEY, settings);

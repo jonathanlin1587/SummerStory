@@ -46,19 +46,46 @@ export function useActivities() {
       createdAt: new Date().toISOString(),
       photos: [],
     };
-    await saveActivities([...activities, newActivity]);
+    let next: Activity[] = [];
+    setActivities((prev) => {
+      next = [...prev, newActivity];
+      return next;
+    });
+    try {
+      await platformApi.saveActivities(next);
+    } catch (error) {
+      console.error('Failed to save activities:', error);
+      setActivities((prev) => prev.filter((a) => a.id !== newActivity.id));
+      throw error;
+    }
   };
 
   const updateActivity = async (id: string, updates: Partial<Activity>) => {
-    const updated = activities.map(a => 
-      a.id === id ? { ...a, ...updates } : a
-    );
-    await saveActivities(updated);
+    let next: Activity[] = [];
+    setActivities((prev) => {
+      next = prev.map((a) => (a.id === id ? { ...a, ...updates } : a));
+      return next;
+    });
+    try {
+      await platformApi.saveActivities(next);
+    } catch (error) {
+      console.error('Failed to save activities:', error);
+      await loadActivities();
+    }
   };
 
   const deleteActivity = async (id: string) => {
-    const filtered = activities.filter(a => a.id !== id);
-    await saveActivities(filtered);
+    let next: Activity[] = [];
+    setActivities((prev) => {
+      next = prev.filter((a) => a.id !== id);
+      return next;
+    });
+    try {
+      await platformApi.saveActivities(next);
+    } catch (error) {
+      console.error('Failed to save activities:', error);
+      await loadActivities();
+    }
   };
 
   const completeActivity = async (id: string) => {

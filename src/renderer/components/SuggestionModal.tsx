@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { X, Sparkles, RefreshCw } from 'lucide-react';
 import { Activity, PresetActivity } from '@types';
 import { theme } from '../styles/theme';
@@ -12,6 +12,22 @@ interface SuggestionModalProps {
 }
 
 export default function SuggestionModal({ onClose, onAdd, existingActivities }: SuggestionModalProps) {
+  const backdropCloseEnabled = useRef(false);
+
+  useEffect(() => {
+    backdropCloseEnabled.current = false;
+    const t = window.setTimeout(() => {
+      backdropCloseEnabled.current = true;
+    }, 200);
+    return () => window.clearTimeout(t);
+  }, []);
+
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) return;
+    if (!backdropCloseEnabled.current) return;
+    onClose();
+  };
+
   const [suggestions, setSuggestions] = useState<PresetActivity[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -51,7 +67,7 @@ export default function SuggestionModal({ onClose, onAdd, existingActivities }: 
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: 1000,
-    }} onClick={onClose}>
+    }} onClick={handleBackdropClick}>
       <div 
         style={{
           background: theme.colors.surface,

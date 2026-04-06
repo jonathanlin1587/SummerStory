@@ -32,6 +32,7 @@ In Firebase Console:
 - Create **Cloud Firestore** database
 - Enable **Storage**
 - Add a Web app and copy config values
+- **Authorized domains:** Firebase Console → Authentication → Settings → Authorized domains. Add your live site hostname (e.g. `yoursite.vercel.app` and any custom domain). Without this, sign-in fails or appears to “flash” and cancel.
 
 ### 2) Add env vars
 
