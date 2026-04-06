@@ -14,7 +14,7 @@ export default function SettingsView() {
     if (settings) setLocalSettings(settings);
   }, [settings]);
 
-  if (loading || !settings) {
+  if (loading) {
     return (
       <div style={{ 
         height: '100%', 
@@ -39,7 +39,7 @@ export default function SettingsView() {
   };
 
   const updateSetting = (key: keyof typeof settings, value: any) => {
-    setLocalSettings(prev => prev ? { ...prev, [key]: value } : null);
+    setLocalSettings(prev => ({ ...prev, [key]: value }));
   };
 
   return (

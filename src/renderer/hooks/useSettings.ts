@@ -3,8 +3,17 @@ import { UserSettings } from '@types';
 import { platformApi } from '../services/platformApi';
 import { onAuthStateChange } from '../services/firebaseClient';
 
+const fallbackSettings: UserSettings = {
+  notificationEnabled: true,
+  notificationTime: '10:00',
+  theme: 'summer',
+  cloudSyncEnabled: false,
+  activeHoursStart: '10:00',
+  activeHoursEnd: '20:00',
+};
+
 export function useSettings() {
-  const [settings, setSettings] = useState<UserSettings | null>(null);
+  const [settings, setSettings] = useState<UserSettings>(fallbackSettings);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -22,9 +31,10 @@ export function useSettings() {
   const loadSettings = async () => {
     try {
       const data = await platformApi.getSettings();
-      setSettings(data);
+      setSettings(data ?? fallbackSettings);
     } catch (error) {
       console.error('Failed to load settings:', error);
+      setSettings(fallbackSettings);
     } finally {
       setLoading(false);
     }
