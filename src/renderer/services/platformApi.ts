@@ -1,4 +1,7 @@
 import { Activity, UserSettings } from '@types';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { db, getCurrentUser, isFirebaseEnabled, storage } from './firebaseClient';
 
 const ACTIVITIES_KEY = 'summer-checklist.activities';
 const SETTINGS_KEY = 'summer-checklist.settings';
@@ -46,16 +49,41 @@ function saveLocalJson<T>(key: string, value: T) {
   localStorage.setItem(key, JSON.stringify(value));
 }
 
-function readFileAsDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result || ''));
-    reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(file);
-  });
+function canUseCloudSync() {
+  return Boolean(isFirebaseEnabled && db && storage && getCurrentUser());
 }
 
-async function selectPhotosInBrowser(): Promise<string[]> {
+function getUserDataDocRef() {
+  const user = getCurrentUser();
+  if (!db || !user) return null;
+  return doc(db, 'users', user.uid, 'app', 'data');
+}
+
+async function getCloudData() {
+  const ref = getUserDataDocRef();
+  if (!ref) return null;
+
+  const snapshot = await getDoc(ref);
+  if (!snapshot.exists()) return null;
+  return snapshot.data() as Partial<{ activities: Activity[]; settings: UserSettings }>;
+}
+
+async function saveCloudData(partialData: Partial<{ activities: Activity[]; settings: UserSettings }>) {
+  const ref = getUserDataDocRef();
+  if (!ref) return false;
+
+  await setDoc(
+    ref,
+    {
+      ...partialData,
+      updatedAt: new Date().toISOString(),
+    },
+    { merge: true }
+  );
+  return true;
+}
+
+async function selectPhotoFilesInBrowser(): Promise<File[]> {
   if (typeof document === 'undefined') return [];
 
   return new Promise((resolve) => {
@@ -66,8 +94,7 @@ async function selectPhotosInBrowser(): Promise<string[]> {
 
     input.onchange = async () => {
       const files = Array.from(input.files ?? []);
-      const dataUrls = await Promise.all(files.map((file) => readFileAsDataUrl(file)));
-      resolve(dataUrls.filter(Boolean));
+      resolve(files);
     };
 
     input.click();
@@ -86,12 +113,29 @@ export const platformApi = {
   async getActivities(): Promise<Activity[]> {
     const electronAPI = getElectronAPI();
     if (electronAPI) return electronAPI.getActivities();
+
+    if (canUseCloudSync()) {
+      const cloudData = await getCloudData();
+      if (cloudData?.activities) return cloudData.activities;
+
+      const localActivities = readLocalJson<Activity[]>(ACTIVITIES_KEY, []);
+      if (localActivities.length > 0) {
+        await saveCloudData({ activities: localActivities });
+      }
+      return localActivities;
+    }
+
     return readLocalJson<Activity[]>(ACTIVITIES_KEY, []);
   },
 
   async saveActivities(activities: Activity[]): Promise<boolean> {
     const electronAPI = getElectronAPI();
     if (electronAPI) return electronAPI.saveActivities(activities);
+
+    if (canUseCloudSync()) {
+      return saveCloudData({ activities });
+    }
+
     saveLocalJson(ACTIVITIES_KEY, activities);
     return true;
   },
@@ -99,12 +143,27 @@ export const platformApi = {
   async getSettings(): Promise<UserSettings> {
     const electronAPI = getElectronAPI();
     if (electronAPI) return electronAPI.getSettings();
+
+    if (canUseCloudSync()) {
+      const cloudData = await getCloudData();
+      if (cloudData?.settings) return cloudData.settings;
+
+      const localSettings = readLocalJson<UserSettings>(SETTINGS_KEY, defaultSettings);
+      await saveCloudData({ settings: localSettings });
+      return localSettings;
+    }
+
     return readLocalJson<UserSettings>(SETTINGS_KEY, defaultSettings);
   },
 
   async saveSettings(settings: UserSettings): Promise<boolean> {
     const electronAPI = getElectronAPI();
     if (electronAPI) return electronAPI.saveSettings(settings);
+
+    if (canUseCloudSync()) {
+      return saveCloudData({ settings });
+    }
+
     saveLocalJson(SETTINGS_KEY, settings);
     return true;
   },
@@ -112,7 +171,36 @@ export const platformApi = {
   async selectPhoto(): Promise<string[]> {
     const electronAPI = getElectronAPI();
     if (electronAPI) return electronAPI.selectPhoto();
-    return selectPhotosInBrowser();
+
+    const files = await selectPhotoFilesInBrowser();
+    if (!files.length) return [];
+
+    if (!canUseCloudSync() || !storage) {
+      return Promise.all(
+        files.map(
+          (file) =>
+            new Promise<string>((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onload = () => resolve(String(reader.result || ''));
+              reader.onerror = () => reject(reader.error);
+              reader.readAsDataURL(file);
+            })
+        )
+      );
+    }
+
+    const user = getCurrentUser();
+    if (!user) return [];
+
+    return Promise.all(
+      files.map(async (file) => {
+        const safeName = file.name.replace(/\s+/g, '-');
+        const objectPath = `users/${user.uid}/photos/${Date.now()}-${crypto.randomUUID()}-${safeName}`;
+        const fileRef = ref(storage, objectPath);
+        await uploadBytes(fileRef, file);
+        return getDownloadURL(fileRef);
+      })
+    );
   },
 
   async showNotification(title: string, body: string): Promise<void> {
@@ -141,5 +229,9 @@ export const platformApi = {
     const electronAPI = getElectronAPI();
     if (electronAPI) return electronAPI.openExternal(url);
     window.open(url, '_blank', 'noopener,noreferrer');
+  },
+
+  isCloudSyncAvailable() {
+    return isFirebaseEnabled;
   },
 };

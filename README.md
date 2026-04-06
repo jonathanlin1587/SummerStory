@@ -1,202 +1,70 @@
-# Summer Activity Tracker
+# SummerStory
 
-This project now supports both:
-- **Desktop app** (Electron)
-- **Web app** (Vite, deployable to Vercel)
+Summer activity tracker with a web app (Vite) and desktop app (Electron).
 
-## Run as a web app
+## Quick Start (Web)
 
 ```bash
 npm install
 npm run dev:web
 ```
 
-## Build web app
+## Deploy (Vercel)
+
+This repo already includes `vercel.json`.
+
+1. Import repo in Vercel.
+2. Build command: `npm run build:web`
+3. Output directory: `dist/renderer`
+4. Deploy.
+
+## Google Sign-In + Cross-Device Sync
+
+The web app supports:
+- Google sign-in (Firebase Auth)
+- Activities/settings sync (Firestore)
+- Photo upload and cloud URLs (Firebase Storage)
+
+### 1) Create Firebase project
+
+In Firebase Console:
+- Enable **Authentication > Google**
+- Create **Cloud Firestore** database
+- Enable **Storage**
+- Add a Web app and copy config values
+
+### 2) Add env vars
+
+Create `.env.local` from `.env.example`:
 
 ```bash
-npm run build:web
+cp .env.example .env.local
 ```
 
-Output is generated in `dist/renderer`.
+Fill in:
 
-## Deploy to Vercel
-
-### Option 1: Vercel Dashboard
-1. Import this project in Vercel.
-2. Framework preset: **Vite**
-3. Build command: `npm run build:web`
-4. Output directory: `dist/renderer`
-
-`vercel.json` is already configured, including SPA rewrites.
-
-### Option 2: Vercel CLI
-
-```bash
-npm i -g vercel
-vercel
-vercel --prod
+```env
+VITE_FIREBASE_API_KEY=...
+VITE_FIREBASE_AUTH_DOMAIN=...
+VITE_FIREBASE_PROJECT_ID=...
+VITE_FIREBASE_STORAGE_BUCKET=...
+VITE_FIREBASE_MESSAGING_SENDER_ID=...
+VITE_FIREBASE_APP_ID=...
 ```
 
-## Notes on storage and photos
+### 3) Add Vercel env vars
 
-- In **Electron**, data uses `electron-store` and photos use local file paths.
-- In **web**, data uses `localStorage` and uploaded photos are saved as data URLs in the browser.
+In Vercel Project Settings, add the same `VITE_FIREBASE_*` variables for Production (and Preview if needed), then redeploy.
 
-This means web data stays on the browser/device unless you add a backend sync layer.
-# Summer Activity Tracker 🌞
+### 4) Use in app
 
-A beautiful BeReal-inspired desktop app to track and complete summer activities with your best friend. Built with Electron, React, and TypeScript.
+Open **Settings > Cloud Sync** and click **Continue with Google**.
 
-## Features
+When signed in:
+- Existing local activities/settings are copied to cloud once (if cloud is empty).
+- New edits sync across devices using the same Google account.
 
-✨ **Multiple View Modes**
-- List View - Classic activity checklist
-- Card View - Pinterest-style masonry grid
-- Kanban Board - Drag-and-drop To Do / In Progress / Done
-- Timeline View - Calendar with completed activities
-- Recap View - Statistics and photo memories
+## Notes
 
-📸 **Photo Memories**
-- Upload photos for completed activities
-- Photo gallery with lightbox view
-- Add captions to your photos
-
-🔔 **Smart Notifications**
-- Daily activity suggestions
-- Customizable active hours
-- Desktop notifications
-
-📊 **Recaps & Analytics**
-- Weekly, monthly, and summer-long recaps
-- Completion statistics and streaks
-- Beautiful timeline graphs
-- Photo grid of all your memories
-
-🎯 **AI Activity Suggestions**
-- 50+ preset summer activities
-- Smart suggestions based on time of day
-- Category-based recommendations
-
-🎨 **Beautiful Summer Theme**
-- Warm, vibrant color palette
-- Smooth animations
-- Modern, clean UI
-
-## Installation
-
-1. Clone this repository
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-## Development
-
-Run the app in development mode:
-
-```bash
-npm run dev
-```
-
-This will start both the Vite dev server and Electron in watch mode.
-
-## Building
-
-Build the app for production:
-
-```bash
-npm run build
-```
-
-Package the app for your platform:
-
-```bash
-# macOS
-npm run package:mac
-
-# Windows
-npm run package:win
-
-# Linux
-npm run package:linux
-```
-
-## Tech Stack
-
-- **Electron** - Cross-platform desktop framework
-- **React** - UI library
-- **TypeScript** - Type safety
-- **Vite** - Fast build tool
-- **electron-store** - Data persistence
-- **date-fns** - Date utilities
-- **recharts** - Chart visualization
-- **framer-motion** - Animations
-- **lucide-react** - Beautiful icons
-
-## Project Structure
-
-```
-summer-checklist/
-├── src/
-│   ├── main/              # Electron main process
-│   │   ├── main.ts
-│   │   ├── preload.ts
-│   │   └── notifications.ts
-│   ├── renderer/          # React app
-│   │   ├── components/
-│   │   │   ├── views/
-│   │   │   └── ...
-│   │   ├── services/
-│   │   ├── hooks/
-│   │   └── styles/
-│   └── types/             # TypeScript definitions
-├── presets/               # Preset activities database
-└── package.json
-```
-
-## Usage
-
-### Adding Activities
-1. Click the "Add Activity" button in any view
-2. Fill in the title, description, category, and tags
-3. Save to add to your list
-
-### Completing Activities
-1. Click the circle icon next to an activity to mark it complete
-2. Upload photos of your adventure
-3. View it in the Timeline to see when you completed it
-
-### Viewing Recaps
-1. Go to the Recap view
-2. Select your time period (week, month, or summer)
-3. See your statistics, timeline graph, and photo grid
-4. Export your recap to share with friends
-
-### Notifications
-1. Go to Settings
-2. Enable notifications
-3. Set your active hours
-4. Receive random activity suggestions throughout the day
-
-## Future Enhancements
-
-- Cloud sync across devices
-- Friend collaboration (shared activity lists)
-- Video recap generation
-- Advanced AI with OpenAI integration
-- Weather-based suggestions
-- Location-aware activities
-- Social media sharing
-- Mobile companion app
-
-## License
-
-MIT
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
----
-
-Made with ☀️ for an unforgettable summer
+- Desktop mode (Electron) still uses `electron-store`.
+- Web mode without Firebase config falls back to local browser storage.

@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Bell, BellOff, Clock, Sun, Moon } from 'lucide-react';
+import { Bell, Clock, Sun, Moon, Cloud, LogIn, LogOut } from 'lucide-react';
 import { theme } from '../../styles/theme';
 import { useSettings } from '../../hooks/useSettings';
 import { platformApi } from '../../services/platformApi';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function SettingsView() {
   const { settings, saveSettings, loading } = useSettings();
+  const { user, isEnabled, signInWithGoogle, signOutGoogle } = useAuth();
   const [localSettings, setLocalSettings] = useState(settings);
 
   useEffect(() => {
@@ -28,7 +30,10 @@ export default function SettingsView() {
 
   const handleSave = async () => {
     if (localSettings) {
-      await saveSettings(localSettings);
+      await saveSettings({
+        ...localSettings,
+        cloudSyncEnabled: Boolean(user),
+      });
       platformApi.showNotification('Settings Saved', 'Your preferences have been updated!');
     }
   };
@@ -55,6 +60,81 @@ export default function SettingsView() {
         padding: '24px',
       }}>
         <div style={{ maxWidth: '600px' }}>
+          <div style={{
+            background: theme.colors.surface,
+            borderRadius: theme.borderRadius.large,
+            padding: '24px',
+            boxShadow: theme.shadows.small,
+            marginBottom: '24px',
+          }}>
+            <h3 style={{
+              fontSize: '18px',
+              fontWeight: '700',
+              color: theme.colors.text,
+              marginBottom: '14px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+            }}>
+              <Cloud size={20} />
+              Cloud Sync
+            </h3>
+            {!isEnabled ? (
+              <p style={{ fontSize: '13px', color: theme.colors.textSecondary, lineHeight: 1.5 }}>
+                Firebase is not configured yet. Add Firebase env vars to enable Google sign-in and cross-device sync.
+              </p>
+            ) : (
+              <>
+                <p style={{ fontSize: '13px', color: theme.colors.textSecondary, lineHeight: 1.5, marginBottom: '14px' }}>
+                  {user
+                    ? `Signed in as ${user.email ?? user.displayName ?? 'Google user'}. Your activities, settings, and photos sync across devices.`
+                    : 'Sign in with Google to sync your data and photos across devices.'}
+                </p>
+                {user ? (
+                  <button
+                    type="button"
+                    onClick={() => void signOutGoogle()}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      padding: '10px 16px',
+                      background: theme.colors.textSecondary,
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: theme.borderRadius.medium,
+                      cursor: 'pointer',
+                      fontWeight: 700,
+                    }}
+                  >
+                    <LogOut size={16} />
+                    Sign Out
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => void signInWithGoogle()}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      padding: '10px 16px',
+                      background: theme.colors.primary,
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: theme.borderRadius.medium,
+                      cursor: 'pointer',
+                      fontWeight: 700,
+                    }}
+                  >
+                    <LogIn size={16} />
+                    Continue with Google
+                  </button>
+                )}
+              </>
+            )}
+          </div>
+
           <div style={{
             background: theme.colors.surface,
             borderRadius: theme.borderRadius.large,

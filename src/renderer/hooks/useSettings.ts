@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { UserSettings } from '@types';
 import { platformApi } from '../services/platformApi';
+import { onAuthStateChange } from '../services/firebaseClient';
 
 export function useSettings() {
   const [settings, setSettings] = useState<UserSettings | null>(null);
@@ -8,6 +9,14 @@ export function useSettings() {
 
   useEffect(() => {
     loadSettings();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChange(() => {
+      void loadSettings();
+    });
+
+    return unsubscribe;
   }, []);
 
   const loadSettings = async () => {
