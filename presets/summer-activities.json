@@ -1,0 +1,302 @@
+[
+  {
+    "title": "Watch the sunrise at the beach",
+    "description": "Wake up early and catch the magical sunrise by the ocean",
+    "category": "Outdoor",
+    "tags": ["beach", "nature", "morning"]
+  },
+  {
+    "title": "Have a picnic in the park",
+    "description": "Pack your favorite snacks and enjoy a meal outdoors",
+    "category": "Outdoor",
+    "tags": ["food", "nature", "relaxation"]
+  },
+  {
+    "title": "Try a new ice cream flavor",
+    "description": "Visit a local ice cream shop and be adventurous",
+    "category": "Food",
+    "tags": ["food", "sweet", "local"]
+  },
+  {
+    "title": "Go stargazing",
+    "description": "Find a dark spot and identify constellations",
+    "category": "Outdoor",
+    "tags": ["night", "nature", "astronomy"]
+  },
+  {
+    "title": "Learn to skateboard or rollerblade",
+    "description": "Try a new sport and embrace the learning process",
+    "category": "Adventure",
+    "tags": ["sport", "outdoor", "active"]
+  },
+  {
+    "title": "Have a water balloon fight",
+    "description": "Cool off with friends in an epic water battle",
+    "category": "Social",
+    "tags": ["friends", "fun", "water"]
+  },
+  {
+    "title": "Create sidewalk chalk art",
+    "description": "Express your creativity on the pavement",
+    "category": "Creative",
+    "tags": ["art", "outdoor", "creative"]
+  },
+  {
+    "title": "Visit a farmers market",
+    "description": "Support local vendors and find fresh produce",
+    "category": "Social",
+    "tags": ["local", "food", "community"]
+  },
+  {
+    "title": "Camp in your backyard",
+    "description": "Set up a tent and sleep under the stars at home",
+    "category": "Adventure",
+    "tags": ["camping", "outdoor", "night"]
+  },
+  {
+    "title": "Make homemade popsicles",
+    "description": "Create your own frozen treats with fresh ingredients",
+    "category": "Food",
+    "tags": ["food", "creative", "summer"]
+  },
+  {
+    "title": "Go on a bike ride at sunset",
+    "description": "Explore your neighborhood as the day winds down",
+    "category": "Outdoor",
+    "tags": ["biking", "nature", "sunset"]
+  },
+  {
+    "title": "Have a movie marathon outdoors",
+    "description": "Set up a projector and watch films under the stars",
+    "category": "Social",
+    "tags": ["movies", "friends", "night"]
+  },
+  {
+    "title": "Try paddleboarding or kayaking",
+    "description": "Get out on the water and enjoy a new activity",
+    "category": "Adventure",
+    "tags": ["water", "sport", "outdoor"]
+  },
+  {
+    "title": "Make friendship bracelets",
+    "description": "Create handmade gifts for your best friends",
+    "category": "Creative",
+    "tags": ["craft", "friends", "creative"]
+  },
+  {
+    "title": "Visit a local museum or gallery",
+    "description": "Explore art and culture in your community",
+    "category": "Social",
+    "tags": ["culture", "art", "indoor"]
+  },
+  {
+    "title": "Go fruit picking",
+    "description": "Visit an orchard and pick fresh seasonal fruit",
+    "category": "Outdoor",
+    "tags": ["food", "nature", "activity"]
+  },
+  {
+    "title": "Have a spa day at home",
+    "description": "Pamper yourself with face masks and relaxation",
+    "category": "Relaxation",
+    "tags": ["selfcare", "relaxation", "indoor"]
+  },
+  {
+    "title": "Take photos in a photo booth",
+    "description": "Capture silly memories with your friends",
+    "category": "Social",
+    "tags": ["photos", "friends", "memories"]
+  },
+  {
+    "title": "Learn a TikTok dance",
+    "description": "Master a trending dance and film it together",
+    "category": "Social",
+    "tags": ["dance", "social media", "fun"]
+  },
+  {
+    "title": "Go on a road trip",
+    "description": "Drive to a nearby town or attraction you've never visited",
+    "category": "Adventure",
+    "tags": ["travel", "adventure", "explore"]
+  },
+  {
+    "title": "Have a bonfire",
+    "description": "Roast marshmallows and tell stories around a fire",
+    "category": "Social",
+    "tags": ["fire", "friends", "night"]
+  },
+  {
+    "title": "Try a new restaurant",
+    "description": "Step out of your comfort zone with a new cuisine",
+    "category": "Food",
+    "tags": ["food", "restaurant", "adventure"]
+  },
+  {
+    "title": "Go to a concert or festival",
+    "description": "Experience live music with friends",
+    "category": "Social",
+    "tags": ["music", "friends", "event"]
+  },
+  {
+    "title": "Create a summer playlist",
+    "description": "Curate the perfect soundtrack for your summer",
+    "category": "Creative",
+    "tags": ["music", "creative", "memories"]
+  },
+  {
+    "title": "Have a photoshoot",
+    "description": "Take amazing pictures in beautiful locations",
+    "category": "Creative",
+    "tags": ["photos", "creative", "memories"]
+  },
+  {
+    "title": "Go thrift shopping",
+    "description": "Hunt for unique vintage treasures",
+    "category": "Social",
+    "tags": ["shopping", "vintage", "fashion"]
+  },
+  {
+    "title": "Learn to make sushi",
+    "description": "Try your hand at making Japanese cuisine",
+    "category": "Food",
+    "tags": ["cooking", "food", "skill"]
+  },
+  {
+    "title": "Visit an amusement park",
+    "description": "Ride roller coasters and eat funnel cake",
+    "category": "Adventure",
+    "tags": ["rides", "fun", "adventure"]
+  },
+  {
+    "title": "Have a game night",
+    "description": "Play board games or video games all night",
+    "category": "Social",
+    "tags": ["games", "friends", "indoor"]
+  },
+  {
+    "title": "Go mini golfing",
+    "description": "Have a friendly competition on the putting green",
+    "category": "Social",
+    "tags": ["sport", "friends", "fun"]
+  },
+  {
+    "title": "Make tie-dye shirts",
+    "description": "Create colorful wearable art",
+    "category": "Creative",
+    "tags": ["craft", "fashion", "creative"]
+  },
+  {
+    "title": "Have a car wash",
+    "description": "Clean your car while having fun with water",
+    "category": "Social",
+    "tags": ["water", "productive", "fun"]
+  },
+  {
+    "title": "Go to the beach at night",
+    "description": "Experience the ocean under the moonlight",
+    "category": "Outdoor",
+    "tags": ["beach", "night", "nature"]
+  },
+  {
+    "title": "Create a scrapbook",
+    "description": "Document your summer memories in a creative way",
+    "category": "Creative",
+    "tags": ["memories", "craft", "creative"]
+  },
+  {
+    "title": "Try stand-up paddleboarding",
+    "description": "Challenge your balance on the water",
+    "category": "Adventure",
+    "tags": ["water", "sport", "balance"]
+  },
+  {
+    "title": "Have a karaoke night",
+    "description": "Sing your hearts out to favorite songs",
+    "category": "Social",
+    "tags": ["music", "friends", "fun"]
+  },
+  {
+    "title": "Visit a botanical garden",
+    "description": "Walk through beautiful plant displays",
+    "category": "Outdoor",
+    "tags": ["nature", "flowers", "relaxation"]
+  },
+  {
+    "title": "Make homemade pizza",
+    "description": "Create your perfect pizza from scratch",
+    "category": "Food",
+    "tags": ["cooking", "food", "creative"]
+  },
+  {
+    "title": "Go bowling",
+    "description": "Hit the lanes for strikes and spares",
+    "category": "Social",
+    "tags": ["sport", "friends", "indoor"]
+  },
+  {
+    "title": "Have a photowalk",
+    "description": "Explore your city with cameras in hand",
+    "category": "Creative",
+    "tags": ["photos", "walking", "art"]
+  },
+  {
+    "title": "Try rock climbing",
+    "description": "Challenge yourself at an indoor or outdoor wall",
+    "category": "Adventure",
+    "tags": ["sport", "challenge", "active"]
+  },
+  {
+    "title": "Make smoothie bowls",
+    "description": "Create Instagram-worthy breakfast bowls",
+    "category": "Food",
+    "tags": ["food", "healthy", "creative"]
+  },
+  {
+    "title": "Go to a drive-in movie",
+    "description": "Watch a film from the comfort of your car",
+    "category": "Social",
+    "tags": ["movies", "vintage", "night"]
+  },
+  {
+    "title": "Have a clothing swap",
+    "description": "Trade clothes with friends for new styles",
+    "category": "Social",
+    "tags": ["fashion", "friends", "sustainable"]
+  },
+  {
+    "title": "Learn calligraphy",
+    "description": "Master the art of beautiful handwriting",
+    "category": "Creative",
+    "tags": ["art", "skill", "creative"]
+  },
+  {
+    "title": "Go fishing",
+    "description": "Spend a peaceful day by the water",
+    "category": "Outdoor",
+    "tags": ["water", "nature", "relaxation"]
+  },
+  {
+    "title": "Have a nail art session",
+    "description": "Design creative nail art together",
+    "category": "Creative",
+    "tags": ["beauty", "creative", "fun"]
+  },
+  {
+    "title": "Visit a local coffee shop",
+    "description": "Support local and try their specialty drinks",
+    "category": "Social",
+    "tags": ["coffee", "local", "relaxation"]
+  },
+  {
+    "title": "Go geocaching",
+    "description": "Go on a real-world treasure hunt",
+    "category": "Adventure",
+    "tags": ["outdoor", "adventure", "explore"]
+  },
+  {
+    "title": "Make homemade lemonade",
+    "description": "Create the perfect refreshing summer drink",
+    "category": "Food",
+    "tags": ["drink", "summer", "homemade"]
+  }
+]
